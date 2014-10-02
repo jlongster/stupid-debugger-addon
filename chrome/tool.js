@@ -40,11 +40,11 @@ function resetState() {
 
 function onPaused(event, packet) {
   state.paused = true;
-  if(packet.why.type === 'breakpoint') {
+  if (packet.why.type === 'breakpoint') {
     let sources = state.sources;
     let where = packet.frame.where;
-    for(var i in sources) {
-      if(sources[i].url === where.url) {
+    for (var i in sources) {
+      if (sources[i].url === where.url) {
         selectSource(sources[i], { debug: where.line });
         break;
       }
@@ -60,7 +60,7 @@ function onResumed() {
 }
 
 function togglePaused() {
-  if(state.paused) {
+  if (state.paused) {
     activeThread.resume();
   }
   else {
@@ -78,7 +78,7 @@ function selectSource(source, opts) {
   render(state);
 
   activeThread.source(source).source(res => {
-    if(res.error){
+    if (res.error){
       state.selectedSourceData = { text: 'error' }
     }
     else {
@@ -86,7 +86,7 @@ function selectSource(source, opts) {
                                    text: res.source,
                                    contentType: res.contentType };
 
-      if(opts.debug) {
+      if (opts.debug) {
         state.selectedSourceData.debugLine = opts.debug;
       }
     }
@@ -97,24 +97,24 @@ function selectSource(source, opts) {
 function toggleBreakpoint(line) {
   let sourceData = state.selectedSourceData;
   let url = sourceData.url;
-  if(url) {
+  if (url) {
     let loc = { url: url, line: line };
     let found = false;
 
-    if(!state.breakpoints[url]) {
+    if (!state.breakpoints[url]) {
       state.breakpoints[url] = [];
     }
 
     let bps = state.breakpoints[url];
 
-    for(var i in bps) {
-      if(bps[i].location.url === url &&
+    for (var i in bps) {
+      if (bps[i].location.url === url &&
          bps[i].location.line === line) {
         found = true;
       }
     }
 
-    if(found) {
+    if (found) {
       let bpClient = bps[line];
       bpClient.remove(() => {
         delete bps[line];
@@ -177,7 +177,7 @@ let Editor = React.createClass({
     });
 
     this.editor.on('gutterClick', (ev, line, button) => {
-      if(button === 0) {
+      if (button === 0) {
         this.props.onToggleBreakpoint(line);
       }
     });
@@ -189,11 +189,11 @@ let Editor = React.createClass({
 
   componentDidUpdate: function(prevProps) {
     let data = this.props.selectedSource;
-    if(data.url !== prevProps.selectedSource.url) {
+    if (data.url !== prevProps.selectedSource.url) {
       this.editor.setText(data.text || '');
     }
 
-    if(data.contentType === 'text/javascript') {
+    if (data.contentType === 'text/javascript') {
       this.editor.setMode(SourceEditor.modes.js);
     }
     else {
@@ -202,14 +202,14 @@ let Editor = React.createClass({
 
     this.editor.clearBreakpoints();
 
-    if(data.url) {
-      for(var i in this.props.breakpoints[data.url]) {
+    if (data.url) {
+      for (var i in this.props.breakpoints[data.url]) {
         let bps = this.props.breakpoints[data.url];
         this.editor.addBreakpoint(bps[i].location.line);
       }
     }
 
-    if(data.debugLine) {
+    if (data.debugLine) {
       this.editor.setDebugLocation(data.debugLine - 1);
     }
     else {
@@ -254,7 +254,7 @@ function startup(toolbox, target) {
   target.on('will-navigate', willNavigate);
 
   target.activeTab.attachThread({}, (res, threadClient) => {
-    if(!threadClient) {
+    if (!threadClient) {
       deferred.reject(new Error('Couldn\'t attach to thread: ' + res.error));
     }
 
