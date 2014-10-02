@@ -5,10 +5,58 @@
 /* Go to https://developer.mozilla.org/docs/Tools/DevToolsColors
  * for the default colors used in Firefox Developer Tools */
 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.root > button {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#debugger, #debugger .root, #editor, #editor iframe {
+    height: 100%;
+}
+
 .theme-dark body > p {
   color: #f5f7fa;
 }
 
 .theme-light body > p {
   color: #ed2655;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: block;
+    padding: .25em .5em;
+}
+
+li:hover {
+    background-color: #cccccc;
+    cursor: pointer;
+}
+
+#sources {
+    width: 250px;
+    height: calc(100% - 20px);
+    margin-top: 20px;
+    float: left;
+    overflow-y: auto;
+}
+
+#editor {
+    width: calc(100% - 250px);
+    float: right;
+}
+
+#editor iframe {
+    width: 100%;
 }

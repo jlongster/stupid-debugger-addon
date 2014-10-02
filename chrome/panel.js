@@ -5,7 +5,7 @@
 
 const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr } = Components;
 
-this.EXPORTED_SYMBOLS = ["MyAddonPanel"];
+this.EXPORTED_SYMBOLS = ["DebuggerAddonPanel"];
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -22,14 +22,14 @@ XPCOMUtils.defineLazyModuleGetter(this, "promise",
  * @param Toolbox toolbox
  *        The developer tools toolbox, containing all tools.
  */
-function MyAddonPanel(iframeWindow, toolbox) {
+function DebuggerAddonPanel(iframeWindow, toolbox) {
   this.panelWin = iframeWindow;
   this._toolbox = toolbox;
 
   EventEmitter.decorate(this);
 };
 
-MyAddonPanel.prototype = {
+DebuggerAddonPanel.prototype = {
   get target() this._toolbox.target,
 
   /**

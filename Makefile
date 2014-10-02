@@ -1,4 +1,4 @@
-PROJECT="my-addon"
+PROJECT="debugger-addon"
 VERSION="0.1"
 
 CURRENT_DIR=`pwd`

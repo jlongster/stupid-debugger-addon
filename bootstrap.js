@@ -9,6 +9,8 @@ Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 Cu.import("resource:///modules/devtools/gDevTools.jsm");
 
+var gWindow;
+
 /**
  * `osString` specifies the current operating system.
  * Go to https://developer.mozilla.org/docs/XPCOM_Interface_Reference/nsIXULRuntime
@@ -22,7 +24,7 @@ XPCOMUtils.defineLazyGetter(this, "osString", () =>
  * Go to https://developer.mozilla.org/docs/Localization for more information.
  */
 XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
-  Services.strings.createBundle("chrome://my-addon/locale/strings.properties"));
+  Services.strings.createBundle("chrome://debugger-addon/locale/strings.properties"));
 
 /**
  * `toolDefinition` is an object defining metadata about this add-on.
@@ -30,28 +32,28 @@ XPCOMUtils.defineLazyGetter(this, "toolStrings", () =>
  */
 XPCOMUtils.defineLazyGetter(this, "toolDefinition", () => ({
   // A unique id. Must not contain whitespace.
-  id: "my-addon",
+  id: "debugger-addon",
 
   // The position of the tool's tab within the toolbox
   ordinal: 99,
 
   // Main keybinding key (used as a keyboard shortcut).
-  key: toolStrings.GetStringFromName("MyAddon.commandkey"),
+  key: toolStrings.GetStringFromName("DebuggerAddon.commandkey"),
 
   // Main keybinding modifiers.
   modifiers: osString == "Darwin" ? "accel,alt" : "accel,shift",
 
   // The url of the icon, displayed in the Toolbox.
-  icon: "chrome://my-addon/skin/icon.png",
+  icon: "chrome://debugger-addon/skin/icon.png",
 
   // A tool lives in its own iframe. The Toolbox will load this URL.
-  url: "chrome://my-addon/content/tool.xul",
+  url: "chrome://debugger-addon/content/tool.xul",
 
   // The tool's name. Showed in Firefox' tool menu and in the Toolbox' tab.
-  label: toolStrings.GetStringFromName("MyAddon.label"),
+  label: toolStrings.GetStringFromName("DebuggerAddon.label"),
 
   // The tooltip text shown in the Toolbox's tab.
-  tooltip: toolStrings.GetStringFromName("MyAddon.tooltip"),
+  tooltip: toolStrings.GetStringFromName("DebuggerAddon.tooltip"),
 
   // If the target is not supported, the toolbox will hide the tab.
   // Targets can be local or remote (used in remote debugging).
@@ -62,11 +64,13 @@ XPCOMUtils.defineLazyGetter(this, "toolDefinition", () => ({
   // This function is called when the user select the tool tab.
   // It is called only once the toold definition's URL is loaded.
   build: function(iframeWindow, toolbox) {
-    Cu.import("chrome://my-addon/content/panel.js");
-    let panel = new MyAddonPanel(iframeWindow, toolbox);
+    Cu.import("chrome://debugger-addon/content/panel.js");
+    let panel = new DebuggerAddonPanel(iframeWindow, toolbox);
+    gWindow = iframeWindow;
     return panel.open();
   }
 }));
+
 
 /**
  * Called when the extension needs to start itself up. This happens at
